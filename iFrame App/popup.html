@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<header>
+    <script src="https://cdn.auth0.com/js/auth0/9.18/auth0.min.js"></script>
+</header>
+
+<body>
+    <script type="text/javascript">
+        var webAuth = new auth0.WebAuth({
+            domain: 'tu-playground.eu.auth0.com',
+            clientID: 'FvjixXLsQG8BstQDWgrKUVmoMu8ga5Km',
+        });
+
+        webAuth.popup.callback({
+            "state": "something"
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<header>
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/1.20/auth0-spa-js.production.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        #details {
+            display: none;
+        }
+        #login {
+            display: inline-block;
+            padding: 10px 50px;
+            background-color: lightgrey;
+        }
+    </style>
+</header>
+
+<body>
+    <h1>iFrame Login</h1>
+    <div id="login">Login</div>
+    <div id="details">
+        <p>Welcome, <span id="name"></span>!</p>
+    </details>
+
+    <script>
+        createAuth0Client({
+            domain: 'tu-playground.eu.auth0.com',
+            client_id: 'FvjixXLsQG8BstQDWgrKUVmoMu8ga5Km',
+            redirect_uri: window.origin
+}).then(async auth0 => {
+    const token = await auth0.getTokenSilently().catch(e => console.error(e));
+    if(!await auth0.isAuthenticated()) {
+        
+        document.querySelector("#login").addEventListener("click", async () => {
+            const width = 1;
+            const height = 1;
+            const left = window.screenX + (window.innerWidth - width) / 2;
+            const top = window.screenY + (window.innerHeight - height) / 2;
+            const popup = window.open({},'auth0:authorize:popup',`left=${left},top=${top},width=${width},height=${height},resizable,scrollbars=yes,status=1`);
+
+            await auth0.loginWithPopup({},{popup}).catch(() => {
+                //error while redirecting the user
+            })
+            // await auth0.loginWithRedirect({}).catch(() => {
+            //     //error while redirecting the user
+            // })
+            await loginSuccess(auth0);
+        })
+    }
+    else await loginSuccess(auth0);
+});
+
+    async function loginSuccess(auth0) {
+        const user = await auth0.getUser();
+        document.querySelector("#login").style.display = "none";
+        document.querySelector("#details").style.display = "block";
+        document.querySelector("#name").innerHTML = user.name;
+    } 
+    </script>
+</body>
+
+</html>

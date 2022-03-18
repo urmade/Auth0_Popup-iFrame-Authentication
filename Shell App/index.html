@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<header>
+    <script src="https://cdn.auth0.com/js/auth0/9.18/auth0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #details {
+            display: none;
+        }
+
+        #login {
+            display: inline-block;
+            padding: 10px 50px;
+            background-color: lightgrey;
+        }
+
+        iframe {
+            margin-left: 20%;
+            width: 60%;
+        }
+    </style>
+</header>
+
+<body>
+    <h1>Standard Login</h1>
+    <div id="login" onclick="login()">Login</div>
+    <details style="display: none;">
+        <summary>Logged in</summary>
+        <div id="token"></div>
+    </details>
+
+    <br><br>
+    <iframe src="http://localhost:3001/"></iframe>
+
+    <script>
+        // createAuth0Client({
+        //     domain: 'tu-demo.eu.auth0.com',
+        //     client_id: 'b6vyvwyUvevEJdv52g1ukMakc1oAyMJH'
+        // }).then(auth0 => {
+        //     document.querySelector("#login").addEventListener("click", () => {
+        //         auth0.loginWithRedirect({
+        //         redirect_uri: 'http://localhost:3000/',
+        //         responseType: "token"
+        //     }).then(token => {
+        //         //logged in. you can get the user profile like this:
+        //         auth0.getUser().then(user => {
+        //             console.log(user);
+        //         });
+        //     });
+        //     })
+
+        //     //...
+        // });
+        var webAuth = new auth0.WebAuth({
+            domain: 'tu-playground.eu.auth0.com',
+            clientID: 'R8NCzFQrAiJ2jHSkUWi8W49Kqd0qUeEZ'
+        });
+        function login() {
+            webAuth.authorize({
+                "responseType": "token",
+                "redirectUri": window.origin
+            }, (err, authResult) => {
+                if (err) console.error(err);
+                if (authResult) console.info(authResult);
+            })
+        }
+        const urlSearchParams = new URLSearchParams(window.location.hash);
+        const params = Object.fromEntries(urlSearchParams.entries());
+        if (params["#access_token"]) {
+            document.querySelector("details").style.display = "block";
+            document.querySelector("#token").innerHTML = params["#access_token"];
+        }
+
+    </script>
+</body>
+
+</html>
